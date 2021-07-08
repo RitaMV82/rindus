@@ -11,9 +11,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.rindus.test.model.Posts;
 
@@ -24,6 +28,10 @@ class TestClientTest {
 	
 	@Mock
 	RestTemplate restTemplate;
+	
+	@Mock
+	HttpHeaders headers;
+
 	
 	@InjectMocks
 	private TestClientImpl client;	
@@ -70,6 +78,6 @@ class TestClientTest {
 		assertNotNull(entity);	
 		assertEquals(entity.getBody(), "Body");
 		assertEquals(entity.getStatusCode(), HttpStatus.CREATED);		
-	}
+	}	
 
 }

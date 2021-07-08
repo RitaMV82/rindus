@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.rindus.test.model.Comments;
 import com.rindus.test.model.Posts;
 import com.rindus.test.service.ServiceException;
 
@@ -19,6 +20,11 @@ public interface TestService {
 	ResponseEntity<Posts> updatePostsById(String id, Posts posts) throws ServiceException;
 
 	ResponseEntity<HttpStatus> deletePostsById(String id) throws ServiceException;
+
+	ResponseEntity<List<Comments>> getCommentsFromPost(String id) throws ServiceException;
+
+	ResponseEntity<Posts> modifyPost(String id, Posts posts) throws ServiceException;
+
 	
 	
 }

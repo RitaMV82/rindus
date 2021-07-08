@@ -1,5 +1,6 @@
 package com.rindus.test.webservice;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rindus.test.model.Comments;
 import com.rindus.test.model.Posts;
 import com.rindus.test.service.ServiceException;
 import com.rindus.test.service.interfaces.TestService;
@@ -29,11 +31,11 @@ public class TestControllerImpl implements TestController {
 	 */
 	public ResponseEntity<List<Posts>> getAllPosts() {
 		logger.info("Init get all posts");
-		ResponseEntity<List<Posts>> allPosts = null;
+		ResponseEntity<List<Posts>> allPosts;
 		try {
 			allPosts = service.getAllPosts();
 		} catch (ServiceException e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return allPosts;
 	}
@@ -103,6 +105,39 @@ public class TestControllerImpl implements TestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return postsResponseEntity;
+	}
+
+	/**
+	 * Get all comments for postsId
+	 * 
+	 *  @param id	 
+	 */
+	public ResponseEntity<List<Comments>> getCommentsFromPost(String id) {
+		logger.info("Init get comments");
+        ResponseEntity<List<Comments>> commentsFromPost;
+		try {
+			commentsFromPost = service.getCommentsFromPost(id);
+		} catch (ServiceException e) {
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+        return commentsFromPost;
+	}
+
+	/**
+	 * Modify partial posts
+	 * 
+	 * @param posts
+	 * @return a posts
+	 */
+	public ResponseEntity<Posts> modifyPost(String id, Posts posts) {
+		logger.info("Init modify");
+        ResponseEntity<Posts> responseEntity;
+		try {
+			responseEntity = service.modifyPost(id, posts);
+		} catch (ServiceException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+        return responseEntity;
 	}
 
 

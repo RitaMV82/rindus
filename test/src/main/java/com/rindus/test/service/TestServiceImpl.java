@@ -6,12 +6,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rindus.test.client.interfaces.TestClient;
+import com.rindus.test.model.Comments;
 import com.rindus.test.model.Posts;
 import com.rindus.test.service.interfaces.TestService;
 
@@ -70,8 +72,7 @@ public class TestServiceImpl implements TestService {
 	public ResponseEntity<Posts> insertPosts(Posts posts) throws ServiceException {
 		ResponseEntity<Posts> postsById = this.getPostsById(String.valueOf(posts.getId()));
 		if (postsById.getBody() == null) {
-			Posts newPost = performAddPosts(posts);
-			// return ResponseEntity.ok(newPost);
+			Posts newPost = performAddPosts(posts);			
 			return new ResponseEntity<Posts>(newPost, HttpStatus.CREATED);
 		} else {
 			logger.warn("Post already exist");
@@ -90,11 +91,11 @@ public class TestServiceImpl implements TestService {
 	public ResponseEntity<Posts> updatePostsById(String id, Posts posts) throws ServiceException {
 		ResponseEntity<Posts> postsById = this.getPostsById(id);
 		if (postsById.getBody() != null) {
-			Posts post = performAddPosts(posts);
-			return ResponseEntity.ok(post);
+		  ResponseEntity<Posts> post = client.updatePostsById(id, posts);			
+		  return ResponseEntity.ok(post.getBody());
 		} else {
-			logger.error("Posts not exits");
-			throw new ServiceException();
+		  logger.error("Posts not exits");
+		  throw new ServiceException();
 		}
 	}
 
@@ -109,15 +110,56 @@ public class TestServiceImpl implements TestService {
 		ResponseEntity<Posts> postsById = this.getPostsById(id);
 		if (postsById.getBody() != null) {
 			client.deletePostsById(id);
-			return new ResponseEntity<HttpStatus>(HttpStatus.ACCEPTED);
+			return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
 		} else {
 			throw new ServiceException();
 		}
 
 	}
+	
+	/**
+	 * Method in charge to get a list of Comments by postId
+	 * 
+	 * @param id
+	 * @return
+	 * @throws ServiceException
+	 */
+	public ResponseEntity<List<Comments>> getCommentsFromPost(String id) throws ServiceException {
+
+		HttpEntity<String> commentsById = client.getCommentsByPostId(id);
+		List<Comments> commentsList = null;
+		try {
+			commentsList = mapper.readValue(commentsById.getBody(), ArrayList.class);
+		} catch (Exception e) {
+			logger.error("Error: " + e.getMessage());
+			throw new ServiceException();
+		}
+		return ResponseEntity.ok(commentsList);
+	}
+
+
 
 	/**
-	 * Method private in charge to a add new posts
+	 * Method in charge to modify partially a posts
+	 * 
+	 * @param posts
+	 * @return
+	 * @throws ServiceException
+	 */
+	public ResponseEntity<Posts> modifyPost(String id, Posts posts) throws ServiceException {
+		ResponseEntity<Posts> postsById = this.getPostsById(id);
+
+		if (postsById.getBody().getId() != null) {
+			ResponseEntity<Posts> post = client.modifyPosts(id, posts);
+			return ResponseEntity.ok(post.getBody());
+		} else {
+			logger.error("Posts not exits");
+			throw new ServiceException();
+		}
+	}
+
+	/**
+	 * Method in charge to a add new posts
 	 * 
 	 * @param entity
 	 * @return
@@ -134,5 +176,5 @@ public class TestServiceImpl implements TestService {
 		}
 		return newPost;
 	}
-
+	
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rindus.test.model.Comments;
 import com.rindus.test.model.Posts;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +38,17 @@ public interface TestController {
 	@ApiOperation(value = "Update resource", notes = "Update resource")
 	@PutMapping(value = "/posts/{id}")
 	ResponseEntity<Posts> updatePosts(@PathVariable("id") String id, @RequestBody Posts posts);
+
+	@ApiOperation(value = "Delete resource", notes = "Delete resource")
+	@DeleteMapping(value = "/posts/{id}")
+	ResponseEntity<HttpStatus> removePosts(@PathVariable("id") String id);
+
+	@ApiOperation(value = "Get all comments for one PostId", notes = "Get all comments for one PostId")
+	@GetMapping("/{id}/comments")
+	ResponseEntity<List<Comments>> getCommentsFromPost(@PathVariable("id") String id);
 	
-	@DeleteMapping(value = "/posts/{id}")	
-	ResponseEntity<HttpStatus> removePosts (@PathVariable("id") String id);	
+	@ApiOperation(value = "Partial modify resource", notes = "Partial modify resource")
+	@PostMapping("/modify/{id}")
+	ResponseEntity<Posts> modifyPost(@PathVariable("id") String id, @RequestBody Posts posts);
 	
 }

@@ -12,6 +12,12 @@ public interface TestClient {
 
 	 ResponseEntity<String> addNewPosts(Posts posts);
 
-	 void deletePostsById(String id);	 
+	 void deletePostsById(String id);
+
+	 ResponseEntity<String> getCommentsByPostId(String id);
+
+	 ResponseEntity<Posts> updatePostsById(String id, Posts posts);
+
+	 ResponseEntity<Posts> modifyPosts(String id, Posts posts);	 
 	
 }

@@ -37,6 +37,16 @@ class TestControllerTest {
 	public void testGetAllPosts() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/prueba/posts").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
+	
+	@Test
+	public void testGetCommentsByIdPosts() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/prueba/{id}/comments",7).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testGetAllComments() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/prueba/{id}/comments", 1).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
 
 	@Test
 	public void getPostsById() throws Exception {
@@ -72,11 +82,24 @@ class TestControllerTest {
 	      .andExpect(status().isOk());
 	}
 	
+	@Test
+	public void modifyPosts() throws Exception  {
+		Posts p1 = new Posts();
+		p1.setUserId(500);
+		p1.setId(500);
+		
+	    mvc.perform( MockMvcRequestBuilders.post("/prueba/modify/{id}", 2)
+	      .content(asJsonString(p1))
+	      .contentType(MediaType.APPLICATION_JSON)
+	      .accept(MediaType.APPLICATION_JSON))
+	      .andExpect(status().isOk());
+	}
+	
 	
 	@Test
 	public void deletePosts() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.delete("/prueba/posts/{id}", 1) )
-        .andExpect(status().isAccepted());
+        .andExpect(status().isNoContent());
 	}
 
 	private static String asJsonString(final Object obj) {
