@@ -64,18 +64,10 @@ public class TestClientImpl implements TestClient {
 	 */
 	public ResponseEntity<String> getCommentsByPostId(String id) {
 		HttpHeaders headers = buildHeaders();
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL+"comments/")
-                .queryParam("id", id);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
-
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + "comments/").queryParam("id", id);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+				String.class);
         return response;		
 	}
 
@@ -85,14 +77,11 @@ public class TestClientImpl implements TestClient {
 	 * @return 
 	 */
 	public ResponseEntity<Posts> updatePostsById(String id, Posts posts) {		
-		HttpHeaders headers = buildHeaders();
-
-		buildRequestFactory();
 		
+		HttpHeaders headers = buildHeaders();
+		buildRequestFactory();		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + "posts/" + id);
-
 		HttpEntity<Posts> requestEntity = new HttpEntity<Posts>(posts, headers);
-
 		ResponseEntity<Posts> response = restTemplate.exchange(builder.toUriString(), HttpMethod.PUT, requestEntity,
 				Posts.class);
 		return response;
@@ -105,15 +94,10 @@ public class TestClientImpl implements TestClient {
 	 */
 	public ResponseEntity<Posts> modifyPosts(String id, Posts posts) {	
 
-		HttpHeaders headers = buildHeaders();
-		
+		HttpHeaders headers = buildHeaders();		
 		buildRequestFactory();
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + "posts/" + id);
-
-		//HttpEntity<String> entity = new HttpEntity(objectMapper.writeValueAsString(posts), headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + "posts/" + id);		
 		HttpEntity<Posts> requestEntity = new HttpEntity<Posts>(posts, headers);
-
 		ResponseEntity<Posts> response = restTemplate.exchange(builder.toUriString(), HttpMethod.PATCH, requestEntity,
 				Posts.class);
 
