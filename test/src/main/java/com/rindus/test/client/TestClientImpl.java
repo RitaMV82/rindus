@@ -93,7 +93,6 @@ public class TestClientImpl implements TestClient {
 	 * 
 	 */
 	public ResponseEntity<Posts> modifyPosts(String id, Posts posts) {	
-
 		HttpHeaders headers = buildHeaders();		
 		buildRequestFactory();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + "posts/" + id);		
